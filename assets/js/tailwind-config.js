@@ -13,6 +13,8 @@ tailwind.config = {
             fontFamily: {
                 serif: ['"Cormorant Garamond"', 'serif'],
                 sans: ['"Inter"', 'sans-serif'],
+                'malayalam-serif': ['"Chilanka"', 'cursive'],
+                'malayalam-sans': ['"Anek Malayalam"', 'sans-serif'],
             },
             backgroundImage: {
                 'pattern': "url('https://www.transparenttextures.com/patterns/cubes.png')",
