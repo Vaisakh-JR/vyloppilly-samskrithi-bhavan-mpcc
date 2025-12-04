@@ -13,7 +13,7 @@ tailwind.config = {
             fontFamily: {
                 serif: ['"Cormorant Garamond"', 'serif'],
                 sans: ['"Inter"', 'sans-serif'],
-                'malayalam-serif': ['"Chilanka"', 'cursive'],
+                'malayalam-serif': ['"Arima"', 'system-ui'],
                 'malayalam-sans': ['"Anek Malayalam"', 'sans-serif'],
             },
             backgroundImage: {

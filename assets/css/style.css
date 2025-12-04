@@ -97,11 +97,11 @@ body.font-malayalam .font-sans {
 }
 
 body.font-malayalam .font-serif {
-    font-family: "Chilanka", cursive !important;
+    font-family: "Arima", system-ui !important;
     font-weight: 400;
 }
 
 /* Adjust text size for Malayalam readability */
 body.font-malayalam .text-xs {
-    font-size: 0.9rem !important;
+    font-size: 0.8rem !important;
 }
