@@ -1,0 +1,30 @@
+[
+    {
+        "date": "2025-12-12",
+        "time": "09:00 AM",
+        "title": "Samskrithi Samskarikolsavam",
+        "type": "Cultural",
+        "color": "bg-brand-red"
+    },
+    {
+        "date": "2025-12-15",
+        "time": "06:00 PM",
+        "title": "Kavya Saayahnam",
+        "type": "Poetry",
+        "color": "bg-brand-gold"
+    },
+    {
+        "date": "2025-12-28",
+        "time": "02:30 PM",
+        "title": "Koothambalam Performance",
+        "type": "Dance",
+        "color": "bg-brand-dark"
+    },
+    {
+        "date": "2025-11-28",
+        "time": "10:00 AM",
+        "title": "Art Exhibition Opening",
+        "type": "Art",
+        "color": "bg-brand-red"
+    }
+]

@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyloppilly Samskrithi Bhavan - Gallery Layout</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script src="assets/js/tailwind-config.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="font-sans text-gray-800 bg-white"
+    x-data="{ bookingModalOpen: false, mobileMenuOpen: false, bookingVenue: 'Undecided', bookingType: 'Performing Arts', bookingCategory: 'hall', searchOpen: false }">
+
+    <!-- Top Header -->
+    <header
+        class="fixed top-0 left-0 w-full bg-white z-[60] border-b border-gray-100 h-20 flex items-center justify-between px-6 lg:px-12">
+        <!-- Logo Area -->
+        <div class="flex items-center gap-4">
+            <img src="assets/images/logo.svg" alt="MPCC Logo" class="h-16 w-auto">
+            <div class="hidden md:block">
+                <small class="text-[8px] text-brand-text-gray font-small tracking-widest uppercase">Muiti Purpose
+                    Cultural Complex</small>
+                <h1 class="font-bold text-lg lg:text-xl text-brand-dark leading-tight mt-0">Vyloppilly
+                    Samskrithi
+                    Bhavan</h1>
+                <p class="text-[10px] text-brand-red font-medium tracking-widest uppercase">Dept. of Cultural Affairs,
+                    Govt of Kerala</p>
+            </div>
+            <img src="assets/images/gov.png" alt="MPCC Logo" class="h-14 w-auto">
+        </div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-6">
+            <!-- Social Icons -->
+            <!-- <div class="hidden lg:flex items-center gap-4 text-gray-400 mr-4">
+                <a href="#" class="hover:text-brand-red transition"><i class="fab fa-instagram text-lg"></i></a>
+                <a href="#" class="hover:text-brand-red transition"><i class="fab fa-facebook-f text-lg"></i></a>
+            </div> -->
+
+            <!-- Contact Info (Desktop) -->
+            <div class="hidden lg:flex flex-col text-right text-xs text-gray-500">
+                <a href="tel:+914712311842" class="hover:text-brand-red transition"><i
+                        class="fas fa-phone-alt mr-2"></i>+91 471 2311842</a>
+                <a href="mailto:directormpcc@gmail.com" class="hover:text-brand-red transition"><i
+                        class="fas fa-envelope mr-2"></i>directormpcc@gmail.com</a>
+            </div>
+
+            <!-- Separator -->
+            <div class="hidden lg:block w-px h-8 bg-gray-200"></div>
+            <!-- Language Switch -->
+            <div class="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                <button class="text-brand-red">En</button>
+                <span class="text-gray-300">/</span>
+                <button class="text-gray-400 hover:text-brand-dark transition">Ml</button>
+            </div>
+
+            <!-- Search -->
+            <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-brand-red transition">
+                <i class="fas fa-search text-lg"></i>
+            </button>
+
+            <!-- Mobile Menu Toggle -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden text-brand-dark text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Overlay -->
+    <div x-show="searchOpen" x-cloak
+        class="fixed inset-0 z-[70] bg-white/95 backdrop-blur-sm flex items-center justify-center"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <button @click="searchOpen = false"
+            class="absolute top-8 right-8 text-4xl text-gray-400 hover:text-brand-red"><i
+                class="fas fa-times"></i></button>
+        <div class="w-full max-w-3xl px-6">
+            <input type="text" placeholder="Search for events, venues, or news..."
+                class="w-full bg-transparent border-b-2 border-gray-200 text-3xl font-serif py-4 focus:outline-none focus:border-brand-red placeholder-gray-300">
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation (Desktop) -->
+    <!-- Adjusted top to top-20 to sit below header -->
+    <aside
+        class="hidden lg:flex flex-col fixed left-0 top-20 h-[calc(100vh-80px)] w-24 bg-white border-r border-gray-100 z-40 items-center py-8 overflow-y-auto no-scrollbar"
+        x-data="{ activeMenu: null, menuTop: 0 }">
+
+        <!-- Vertical Menu -->
+        <nav class="flex flex-col items-center gap-8 w-full mt-4">
+            <a href="#home"
+                class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-2">Home</a>
+
+            <!-- About Flyout -->
+            <div class="relative w-full flex justify-center group"
+                @mouseenter="activeMenu = 'about'; menuTop = $el.getBoundingClientRect().top"
+                @mouseleave="activeMenu = null">
+                <a href="#about"
+                    class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-4">About</a>
+
+                <div x-show="activeMenu === 'about'" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-x-2"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 -translate-x-2" :style="{ top: menuTop + 'px' }"
+                    class="fixed left-24 max-h-[calc(100vh-80px)] overflow-y-auto w-72 bg-white shadow-2xl border-l-4 border-brand-red p-8 z-[80] text-left rounded-r-xl">
+                    <h4 class="text-brand-red font-bold uppercase text-xs mb-4 border-b border-gray-100 pb-2">Overview
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="/about-us/aim"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition">Aim</a></li>
+                        <li>
+                            <a href="#"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition font-bold">Vision &
+                                Mission</a>
+                            <ul class="pl-4 mt-2 space-y-2 text-xs text-gray-500">
+                                <li><a href="/about-us/vision/project-digital-archiving"
+                                        class="block hover:text-brand-red transition">Project Digital Archiving</a></li>
+                                <li><a href="/about-us/vision/cultural-museum"
+                                        class="block hover:text-brand-red transition">Cultural Museum</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/who-is-who" class="block hover:text-brand-gold hover:translate-x-1 transition">Who
+                                is Who</a></li>
+
+
+                        <li><a href="/administration"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition">Administration</a>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Activities Flyout -->
+            <div class="relative w-full flex justify-center group"
+                @mouseenter="activeMenu = 'activities'; menuTop = $el.getBoundingClientRect().top"
+                @mouseleave="activeMenu = null">
+                <a href="#"
+                    class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-4">Activities</a>
+
+                <div x-show="activeMenu === 'activities'" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-x-2"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 -translate-x-2" :style="{ top: menuTop + 'px' }"
+                    class="fixed left-24 max-h-[calc(100vh-80px)] overflow-y-auto w-80 bg-white shadow-2xl border-l-4 border-brand-red p-8 z-[80] text-left rounded-r-xl">
+                    <h4 class="text-brand-red font-bold uppercase text-xs mb-4 border-b border-gray-100 pb-2">Programs
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-600 mb-6">
+                        <li>
+                            <a href="#"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition font-bold">Monthly
+                                Programs</a>
+                            <ul class="pl-4 mt-2 space-y-2 text-xs text-gray-500">
+                                <li><a href="/activities/monthly-programs/samskrithi-samskarikolsavam"
+                                        class="block hover:text-brand-red transition">Samskrithi Samskarikolsavam</a>
+                                </li>
+                                <li><a href="/activities/monthly-programs/kavya-saayahnam"
+                                        class="block hover:text-brand-red transition">Kavya Saayahnam</a></li>
+                                <li><a href="/activities/monthly-programs/kadhavela"
+                                        class="block hover:text-brand-red transition">Kadhavela</a></li>
+                                <li><a href="/activities/monthly-programs/unarvu"
+                                        class="block hover:text-brand-red transition">Unarvu</a></li>
+                                <li><a href="/activities/monthly-programs/aksharashlokasadassu"
+                                        class="block hover:text-brand-red transition">Aksharashlokasadassu</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition font-bold">Yearly
+                                Programs</a>
+                            <ul class="pl-4 mt-2 space-y-2 text-xs text-gray-500">
+                                <li><a href="/activities/yearly-programs/nadaka-kalari"
+                                        class="block hover:text-brand-red transition">Nadaka Kalari</a></li>
+                                <li><a href="/activities/yearly-programs/mambazhakkalam"
+                                        class="block hover:text-brand-red transition">Mambazhakkalam</a></li>
+                                <li><a href="/activities/yearly-programs/sopana-sangeetholsavam"
+                                        class="block hover:text-brand-red transition">Sopana Sangeetholsavam</a></li>
+                                <li><a href="/activities/yearly-programs/kavya-pooja"
+                                        class="block hover:text-brand-red transition">Kavya Pooja</a></li>
+                                <li><a href="/activities/yearly-programs/chilanka-dance-festival"
+                                        class="block hover:text-brand-red transition">Chilanka Dance Festival</a></li>
+                                <li><a href="/activities/yearly-programs/mudra-national-dance-festival"
+                                        class="block hover:text-brand-red transition">Mudra National Dance Festival</a>
+                                </li>
+                                <li><a href="/activities/yearly-programs/swathi-swararaga-mahotsavam"
+                                        class="block hover:text-brand-red transition">Swathi Swararaga Mahotsavam</a>
+                                </li>
+                                <li><a href="/activities/yearly-programs/thirakkadha-rachana-padana-camp"
+                                        class="block hover:text-brand-red transition">Thirakkadha Rachana Padana
+                                        Camp</a></li>
+                                <li><a href="/activities/yearly-programs/talamahotsavam"
+                                        class="block hover:text-brand-red transition">Talamahotsavam</a></li>
+                            </ul>
+                        </li>
+
+
+
+
+                    </ul>
+                    <div class="bg-brand-gray p-4 rounded text-xs text-gray-500 italic">
+                        "Celebrating art every day."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Venues Flyout -->
+            <div class="relative w-full flex justify-center group"
+                @mouseenter="activeMenu = 'venues'; menuTop = $el.getBoundingClientRect().top"
+                @mouseleave="activeMenu = null">
+                <a href="#venues"
+                    class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-4">Venues</a>
+
+                <div x-show="activeMenu === 'venues'" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-x-2"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 -translate-x-2" :style="{ top: menuTop + 'px' }"
+                    class="fixed left-24 max-h-[calc(100vh-80px)] overflow-y-auto w-72 bg-white shadow-2xl border-l-4 border-brand-red p-8 z-[80] text-left rounded-r-xl">
+                    <h4 class="text-brand-red font-bold uppercase text-xs mb-4 border-b border-gray-100 pb-2">Facilities
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li>
+                            <a href="#"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition font-bold">Structure
+                                of the Complex</a>
+                            <ul class="pl-4 mt-2 space-y-2 text-xs text-gray-500">
+                                <li><a href="/facilities/structure-of-the-complex/koothambalam"
+                                        class="block hover:text-brand-red transition">Koothambalam</a></li>
+                                <li><a href="/facilities/structure-of-the-complex/kalamandapam"
+                                        class="block hover:text-brand-red transition">Kalamandapam</a></li>
+                                <li><a href="/facilities/structure-of-the-complex/open-air-auditorium"
+                                        class="block hover:text-brand-red transition">Open Air Auditorium</a></li>
+                                <li><a href="/facilities/structure-of-the-complex/seminar-hall"
+                                        class="block hover:text-brand-red transition">Seminar Hall</a></li>
+                                <li><a href="/facilities/structure-of-the-complex/dormitory"
+                                        class="block hover:text-brand-red transition">Dormitory</a></li>
+                            </ul>
+                        </li>
+
+
+
+
+
+                        <li><a href="/facilities/rent-of-venues"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition">Rent of Venues</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Events Flyout -->
+            <div class="relative w-full flex justify-center group"
+                @mouseenter="activeMenu = 'events'; menuTop = $el.getBoundingClientRect().top"
+                @mouseleave="activeMenu = null">
+                <a href="#events"
+                    class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-4">Events</a>
+
+                <div x-show="activeMenu === 'events'" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-x-2"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 -translate-x-2" :style="{ top: menuTop + 'px' }"
+                    class="fixed left-24 max-h-[calc(100vh-80px)] overflow-y-auto w-72 bg-white shadow-2xl border-l-4 border-brand-red p-8 z-[80] text-left rounded-r-xl">
+                    <h4 class="text-brand-red font-bold uppercase text-xs mb-4 border-b border-gray-100 pb-2">Events
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="/events/programmes"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition">Programmes</a></li>
+                        <li><a href="/events/publications"
+                                class="block hover:text-brand-gold hover:translate-x-1 transition">Publications</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <a href="/library"
+                class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-2">Library</a>
+
+            <a href="/applications"
+                class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-2">Applications</a>
+
+
+
+            <a href="#gallery"
+                class="writing-vertical transform rotate-180 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-red transition py-2">Gallery</a>
+
+            <!-- Social / Contact -->
+            <div class="flex flex-col gap-4 text-gray-400">
+                <a href="#" class="hover:text-brand-red transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-brand-red transition"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Mobile Menu Overlay (Enhanced) -->
+    <div x-show="mobileMenuOpen" class="fixed inset-0 z-[60] bg-white flex flex-col"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+
+        <!-- Mobile Menu Header -->
+        <div class="flex justify-between items-center p-6 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <img src="assets/images/logo.png" alt="Logo" class="h-10">
+            </div>
+            <button @click="mobileMenuOpen = false" class="text-2xl text-gray-400"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6" x-data="{ expanded: null }">
+            <a href="#home" @click="mobileMenuOpen = false" class="block font-serif text-2xl text-brand-dark">Home</a>
+
+            <!-- Accordion: About -->
+            <div>
+                <button @click="expanded === 'about' ? expanded = null : expanded = 'about'"
+                    class="flex justify-between items-center w-full font-serif text-2xl text-brand-dark">
+                    <span>About</span>
+                    <i class="fas fa-chevron-down text-sm transition-transform"
+                        :class="expanded === 'about' ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="expanded === 'about'" x-collapse class="pl-4 mt-4 space-y-3 border-l-2 border-gray-100">
+                    <a href="/about-us/aim" class="block text-gray-600">Aim</a>
+                    <div class="space-y-2">
+                        <span class="block text-gray-600 font-bold">Vision & Mission</span>
+                        <div class="pl-4 space-y-2 border-l-2 border-gray-100">
+                            <a href="/about-us/vision/project-digital-archiving"
+                                class="block text-gray-500 text-sm">Project Digital Archiving</a>
+                            <a href="/about-us/vision/cultural-museum" class="block text-gray-500 text-sm">Cultural
+                                Museum</a>
+                        </div>
+                    </div>
+                    <a href="/who-is-who" class="block text-gray-600">Who is Who</a>
+                    <a href="/administration" class="block text-gray-600">Administration</a>
+
+                </div>
+            </div>
+
+            <!-- Accordion: Activities -->
+            <div>
+                <button @click="expanded === 'activities' ? expanded = null : expanded = 'activities'"
+                    class="flex justify-between items-center w-full font-serif text-2xl text-brand-dark">
+                    <span>Activities</span>
+                    <i class="fas fa-chevron-down text-sm transition-transform"
+                        :class="expanded === 'activities' ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="expanded === 'activities'" x-collapse
+                    class="pl-4 mt-4 space-y-3 border-l-2 border-gray-100">
+                    <div class="space-y-2">
+                        <span class="block text-gray-600 font-bold">Monthly Programs</span>
+                        <div class="pl-4 space-y-2 border-l-2 border-gray-100">
+                            <a href="/activities/monthly-programs/samskrithi-samskarikolsavam"
+                                class="block text-gray-500 text-sm">Samskrithi Samskarikolsavam</a>
+                            <a href="/activities/monthly-programs/kavya-saayahnam"
+                                class="block text-gray-500 text-sm">Kavya Saayahnam</a>
+                            <a href="/activities/monthly-programs/kadhavela"
+                                class="block text-gray-500 text-sm">Kadhavela</a>
+                            <a href="/activities/monthly-programs/unarvu" class="block text-gray-500 text-sm">Unarvu</a>
+                            <a href="/activities/monthly-programs/aksharashlokasadassu"
+                                class="block text-gray-500 text-sm">Aksharashlokasadassu</a>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="block text-gray-600 font-bold">Yearly Programs</span>
+                        <div class="pl-4 space-y-2 border-l-2 border-gray-100">
+                            <a href="/activities/yearly-programs/nadaka-kalari"
+                                class="block text-gray-500 text-sm">Nadaka Kalari</a>
+                            <a href="/activities/yearly-programs/mambazhakkalam"
+                                class="block text-gray-500 text-sm">Mambazhakkalam</a>
+                            <a href="/activities/yearly-programs/sopana-sangeetholsavam"
+                                class="block text-gray-500 text-sm">Sopana Sangeetholsavam</a>
+                            <a href="/activities/yearly-programs/kavya-pooja" class="block text-gray-500 text-sm">Kavya
+                                Pooja</a>
+                            <a href="/activities/yearly-programs/chilanka-dance-festival"
+                                class="block text-gray-500 text-sm">Chilanka Dance Festival</a>
+                            <a href="/activities/yearly-programs/mudra-national-dance-festival"
+                                class="block text-gray-500 text-sm">Mudra National Dance Festival</a>
+                            <a href="/activities/yearly-programs/swathi-swararaga-mahotsavam"
+                                class="block text-gray-500 text-sm">Swathi Swararaga Mahotsavam</a>
+                            <a href="/activities/yearly-programs/thirakkadha-rachana-padana-camp"
+                                class="block text-gray-500 text-sm">Thirakkadha Rachana Padana Camp</a>
+                            <a href="/activities/yearly-programs/talamahotsavam"
+                                class="block text-gray-500 text-sm">Talamahotsavam</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Accordion: Facilities -->
+            <div>
+                <button @click="expanded === 'facilities' ? expanded = null : expanded = 'facilities'"
+                    class="flex justify-between items-center w-full font-serif text-2xl text-brand-dark">
+                    <span>Facilities</span>
+                    <i class="fas fa-chevron-down text-sm transition-transform"
+                        :class="expanded === 'facilities' ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="expanded === 'facilities'" x-collapse
+                    class="pl-4 mt-4 space-y-3 border-l-2 border-gray-100">
+                    <div class="space-y-2">
+                        <span class="block text-gray-600 font-bold">Structure of the Complex</span>
+                        <div class="pl-4 space-y-2 border-l-2 border-gray-100">
+                            <a href="/facilities/structure-of-the-complex/koothambalam"
+                                class="block text-gray-500 text-sm">Koothambalam</a>
+                            <a href="/facilities/structure-of-the-complex/kalamandapam"
+                                class="block text-gray-500 text-sm">Kalamandapam</a>
+                            <a href="/facilities/structure-of-the-complex/open-air-auditorium"
+                                class="block text-gray-500 text-sm">Open Air Auditorium</a>
+                            <a href="/facilities/structure-of-the-complex/seminar-hall"
+                                class="block text-gray-500 text-sm">Seminar Hall</a>
+                            <a href="/facilities/structure-of-the-complex/dormitory"
+                                class="block text-gray-500 text-sm">Dormitory</a>
+                        </div>
+                    </div>
+                    <a href="/facilities/rent-of-venues" class="block text-gray-600">Rent of Venues</a>
+
+
+                </div>
+            </div>
+
+            <!-- Accordion: Events -->
+            <div>
+                <button @click="expanded === 'events' ? expanded = null : expanded = 'events'"
+                    class="flex justify-between items-center w-full font-serif text-2xl text-brand-dark">
+                    <span>Events</span>
+                    <i class="fas fa-chevron-down text-sm transition-transform"
+                        :class="expanded === 'events' ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="expanded === 'events'" x-collapse class="pl-4 mt-4 space-y-3 border-l-2 border-gray-100">
+                    <a href="/events/programmes" class="block text-gray-600">Programmes</a>
+                    <a href="/events/publications" class="block text-gray-600">Publications</a>
+                </div>
+            </div>
+
+            <a href="/library" @click="mobileMenuOpen = false"
+                class="block font-serif text-2xl text-brand-dark">Library</a>
+            <a href="/applications" @click="mobileMenuOpen = false"
+                class="block font-serif text-2xl text-brand-dark">Applications</a>
+            <a href="#gallery" @click="mobileMenuOpen = false"
+                class="block font-serif text-2xl text-brand-dark">Gallery</a>
+        </div>
+
+        <!-- Mobile Footer Info -->
+        <div class="p-6 bg-gray-50 border-t border-gray-100">
+            <div class="flex flex-col gap-2 mb-6 text-sm text-gray-500">
+                <a href="tel:+914712311842"><i class="fas fa-phone-alt mr-2 text-brand-red"></i>+91 471
+                    2311842</a>
+                <a href="mailto:directormpcc@gmail.com"><i
+                        class="fas fa-envelope mr-2 text-brand-red"></i>directormpcc@gmail.com</a>
+            </div>
+            <div class="flex gap-4">
+                <button class="px-4 py-2 bg-brand-dark text-white text-xs font-bold uppercase rounded">English</button>
+                <button
+                    class="px-4 py-2 border border-gray-300 text-gray-600 text-xs font-bold uppercase rounded">Malayalam</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <!-- Added pt-20 to account for fixed header -->
+    <main class="lg:ml-24 pt-20">
+
+        <!-- Hero Section (Split) -->
+        <section id="home" class="min-h-[calc(100vh-80px)] grid lg:grid-cols-2 bg-brand-light">
+            <!-- Left: Content -->
+            <div class="flex flex-col justify-center px-6 lg:px-24 py-24 relative">
+                <div class="absolute top-0 left-0 w-full h-full opacity-5 bg-pattern pointer-events-none"></div>
+
+                <span class="text-brand-red font-bold uppercase tracking-widest text-xs mb-6">Est. 1965</span>
+                <h1 class="font-serif text-5xl lg:text-8xl text-brand-dark leading-[0.9] mb-8">
+                    Culture <br>
+                    <span class="italic text-brand-gold">Resonates</span> <br>
+                    Here.
+                </h1>
+                <p class="text-gray-500 text-lg max-w-md leading-relaxed mb-12 border-l-2 border-brand-gold pl-6">
+                    A living museum of performing arts, preserving the soul of Kerala's traditions in a modern
+                    architectural sanctuary.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <button @click="bookingModalOpen = true; bookingCategory = 'hall'"
+                        class="w-full sm:w-auto px-8 py-4 bg-brand-dark text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-red transition">
+                        Book Hall
+                    </button>
+                    <button @click="bookingModalOpen = true; bookingCategory = 'dormitory'"
+                        class="w-full sm:w-auto px-8 py-4 bg-brand-gold text-brand-dark text-xs font-bold uppercase tracking-widest hover:bg-white transition">
+                        Book Dormitory
+                    </button>
+                    <a href="#venues"
+                        class="w-full sm:w-auto px-8 py-4 border border-brand-dark text-brand-dark text-xs font-bold uppercase tracking-widest hover:bg-brand-dark hover:text-white transition text-center">
+                        Explore Spaces
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Visual -->
+            <div class="relative h-[50vh] lg:h-auto overflow-hidden group hero-mask" x-data="{ 
+                    currentSlide: 0, 
+                    slides: [
+                        { img: 'assets/images/slider/sq/1.webp', text: 'The Soul of Kerala' },
+                        { img: 'assets/images/slider/sq/2.webp', text: 'Art in Motion' },
+                        { img: 'assets/images/slider/sq/3.webp', text: 'Cultural Heritage' },
+                        { img: 'assets/images/slider/sq/4.webp', text: 'Timeless Traditions' }
+                    ],
+                    next() { this.currentSlide = (this.currentSlide + 1) % this.slides.length },
+                    prev() { this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length },
+                    init() { setInterval(() => this.next(), 5000) }
+                }">
+
+                <!-- Slides -->
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div x-show="currentSlide === index"
+                        x-transition:enter="transition opacity duration-1000 ease-in-out"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition opacity duration-1000 ease-in-out absolute inset-0"
+                        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                        class="absolute inset-0 w-full h-full">
+                        <img :src="slide.img" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div class="absolute bottom-12 left-12 text-white">
+                            <p class="font-serif italic text-2xl" x-text="'&quot;' + slide.text + '&quot;'"></p>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Navigation Buttons -->
+                <button @click="prev()"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-brand-red text-white p-3 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100 z-10">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button @click="next()"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-brand-red text-white p-3 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100 z-10">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Indicators -->
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    <template x-for="(slide, index) in slides" :key="index">
+                        <button @click="currentSlide = index" class="h-1 rounded-full transition-all duration-300"
+                            :class="currentSlide === index ? 'bg-brand-gold w-8' : 'bg-white/50 w-2 hover:bg-white'">
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section (Editorial) -->
+        <section id="about" class="py-32 px-4 sm:px-6 lg:px-24 bg-white">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-12 gap-16 items-start">
+                <div class="lg:col-span-4">
+                    <h2 class="font-serif text-5xl text-brand-dark leading-none mb-8">
+                        Preserving <br>
+                        <span class="text-brand-red italic">Legacy</span>
+                    </h2>
+                    <div class="w-12 h-1 bg-brand-gold"></div>
+                </div>
+                <div class="lg:col-span-8">
+                    <p class="text-2xl font-serif text-gray-800 leading-relaxed mb-8">
+                        <span class="text-6xl float-left mr-4 mt-[-10px] text-brand-gold font-serif">K</span>erala
+                        is a
+                        narrow strip of land protected by natural boundaries. The uniqueness of the state is its
+                        cultural diversity. Our mission is to keep these traditions alive.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8 mt-12">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs mb-4 text-brand-red">Our
+                                Mission</h4>
+                            <p class="text-gray-500 text-sm leading-relaxed">To provide a world-class platform
+                                for
+                                artists and cultural practitioners, ensuring the continuity of Kerala's rich
+                                artistic
+                                heritage.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs mb-4 text-brand-red">Our
+                                Vision</h4>
+                            <p class="text-gray-500 text-sm leading-relaxed">A society that cherishes its roots
+                                while
+                                embracing the future, where art is accessible, appreciated, and preserved for
+                                generations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Venues Section (Masonry Grid) -->
+        <section id="venues" class="bg-brand-gray py-32 px-4 sm:px-6 lg:px-24">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <span class="text-brand-gold font-bold uppercase tracking-widest text-xs mb-2 block">Our
+                        Spaces</span>
+                    <h2 class="font-serif text-4xl text-brand-dark">The Collection</h2>
+                </div>
+                <a href="#"
+                    class="hidden md:inline-block text-xs font-bold uppercase tracking-widest border-b border-brand-dark pb-1 hover:text-brand-red hover:border-brand-red transition">View
+                    All Venues</a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group relative h-[500px] overflow-hidden cursor-pointer"
+                    @click="bookingModalOpen = true; bookingVenue = 'Koothambalam'">
+                    <img src="assets/images/designs/koothambalam.jpg"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-brand-red/80 transition duration-500">
+                    </div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                        <span
+                            class="text-brand-gold text-xs font-bold uppercase tracking-widest mb-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500 delay-100">Signature
+                            Venue</span>
+                        <h3
+                            class="font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition duration-500">
+                            Koothambalam</h3>
+                        <p
+                            class="text-sm opacity-0 group-hover:opacity-100 transition duration-500 delay-200 line-clamp-3">
+                            Traditional dance theatre structure designed scientifically for acoustics and
+                            aesthetics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group relative h-[500px] overflow-hidden cursor-pointer lg:mt-12"
+                    @click="bookingModalOpen = true; bookingVenue = 'Padippura'">
+                    <img src="assets/images/designs/padippura.jpg"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-brand-red/80 transition duration-500">
+                    </div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                        <span
+                            class="text-brand-gold text-xs font-bold uppercase tracking-widest mb-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500 delay-100">The
+                            Gateway</span>
+                        <h3
+                            class="font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition duration-500">
+                            Padippura</h3>
+                        <p
+                            class="text-sm opacity-0 group-hover:opacity-100 transition duration-500 delay-200 line-clamp-3">
+                            The traditional arched gateway serves as a grand entrance and a smaller venue.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group relative h-[500px] overflow-hidden cursor-pointer"
+                    @click="bookingModalOpen = true; bookingVenue = 'Kalmandapam'">
+                    <img src="assets/images/designs/kalmandapam.jpg"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-brand-red/80 transition duration-500">
+                    </div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                        <span
+                            class="text-brand-gold text-xs font-bold uppercase tracking-widest mb-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500 delay-100">Open
+                            Air</span>
+                        <h3
+                            class="font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition duration-500">
+                            Kalmandapam</h3>
+                        <p
+                            class="text-sm opacity-0 group-hover:opacity-100 transition duration-500 delay-200 line-clamp-3">
+                            A granite floor performance space ideal for martial arts like Kalaripayattu.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team (Minimal Grid) -->
+        <section class="py-24 px-4 sm:px-6 lg:px-24 bg-white border-t border-gray-100">
+            <div class="text-center mb-16">
+                <span class="text-brand-red font-bold uppercase tracking-widest text-xs mb-2 block">Leadership</span>
+                <h2 class="font-serif text-4xl text-brand-dark">The Council</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                <!-- Member 1 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/pinarayi-vijayan.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Sri. Pinarayi Vijayan</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Hon. Chief Minister</p>
+                </div>
+                <!-- Member 2 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/saji_cheriyan_minister.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Sri. Saji Cherian</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Hon. Minister</p>
+                </div>
+                <!-- Member 3 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/rajan_ias.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Dr. Rajan N</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Principal Secretary</p>
+                </div>
+                <!-- Member 4 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/maya_director.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Smt. Maya N. IFS</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Director</p>
+                </div>
+                <!-- Member 5 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/gs_pradheep1.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Sri. G.S. Pradeep</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Vice Chairman</p>
+                </div>
+                <!-- Member 6 -->
+                <div class="text-center group">
+                    <div
+                        class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition duration-500">
+                        <img src="assets/images/top-officials/maneksh_sec.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-serif text-lg font-bold text-brand-dark">Sri. P.S. Prasanth</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Secretary</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="py-24 px-4 sm:px-6 lg:px-24 bg-brand-gray border-t border-gray-200" x-data="{
+            currentDate: new Date(),
+            selectedDate: null,
+            view: 'month',
+            events: [],
+            init() {
+                fetch('assets/data/events.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to load events');
+                        return response.json();
+                    })
+                    .then(data => {
+                        this.events = data;
+                        console.log('Events loaded:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error loading events:', error);
+                        alert('Unable to load events. If you are opening this file directly, your browser may block loading external data. Please use a local server (e.g., Live Server in VS Code).');
+                    });
+            },
+            get monthNames() {
+                return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            },
+            get daysInMonth() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                const days = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1).getDay(); 
+                const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; 
+                let grid = [];
+                for (let i = 0; i < adjustedFirstDay; i++) grid.push(null);
+                for (let i = 1; i <= days; i++) grid.push(i);
+                return grid;
+            },
+            get currentMonthName() {
+                return this.monthNames[this.currentDate.getMonth()];
+            },
+            get currentYear() {
+                return this.currentDate.getFullYear();
+            },
+            prevMonth() {
+                this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+            },
+            nextMonth() {
+                this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+            },
+            selectDate(day) {
+                if (!day) return;
+                const dateStr = `${this.currentYear}-${String(this.currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                this.selectedDate = dateStr;
+            },
+            get filteredEvents() {
+                if (this.selectedDate) {
+                    return this.events.filter(e => e.date === this.selectedDate);
+                }
+                return this.events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            },
+            hasEvent(day) {
+                if (!day) return false;
+                const dateStr = `${this.currentYear}-${String(this.currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                return this.events.some(e => e.date === dateStr);
+            }
+        }">
+            <div class="grid lg:grid-cols-12 gap-16">
+                <!-- Left: Calendar -->
+                <div class="lg:col-span-5">
+                    <div class="mb-8">
+                        <span
+                            class="text-brand-red font-bold uppercase tracking-widest text-xs mb-2 block">Schedule</span>
+                        <h2 class="font-serif text-4xl text-brand-dark">Calendar</h2>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+                        <!-- Calendar Header -->
+                        <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                            <button @click="prevMonth()" class="text-gray-400 hover:text-brand-dark transition"><i
+                                    class="fas fa-chevron-left"></i></button>
+                            <h3 class="font-serif text-xl font-bold text-brand-dark"
+                                x-text="currentMonthName + ' ' + currentYear"></h3>
+                            <button @click="nextMonth()" class="text-gray-400 hover:text-brand-dark transition"><i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <!-- Days Header -->
+                        <div
+                            class="grid grid-cols-7 text-center py-4 bg-gray-50 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                            <div>Sun</div>
+                        </div>
+
+                        <!-- Days Grid -->
+                        <div class="grid grid-cols-7 text-center p-4 gap-y-4">
+                            <template x-for="(day, index) in daysInMonth" :key="index">
+                                <div class="relative flex justify-center">
+                                    <button @click="selectDate(day)" :disabled="!day"
+                                        class="w-10 h-10 rounded-full flex items-center justify-center text-sm transition relative"
+                                        :class="{
+                                            'hover:bg-gray-100 text-gray-700': day && selectedDate !== `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                                            'bg-brand-red text-white shadow-lg shadow-brand-red/30': day && selectedDate === `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                                            'text-transparent pointer-events-none': !day
+                                        }">
+                                        <span x-text="day"></span>
+                                        <!-- Event Dot -->
+                                        <div x-show="hasEvent(day)"
+                                            class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                                            :class="selectedDate === `${currentYear}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` ? 'bg-white' : 'bg-brand-gold'">
+                                        </div>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Event List -->
+                <div class="lg:col-span-7">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <span
+                                class="text-brand-gold font-bold uppercase tracking-widest text-xs mb-2 block">Upcoming</span>
+                            <h2 class="font-serif text-4xl text-brand-dark">Your Events</h2>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="flex space-x-4 border-b border-gray-200">
+                            <button @click="selectedDate = null; view = 'month'"
+                                class="pb-2 text-xs font-bold uppercase tracking-widest transition border-b-2"
+                                :class="!selectedDate ? 'border-brand-dark text-brand-dark' : 'border-transparent text-gray-400 hover:text-brand-dark'">
+                                All Events
+                            </button>
+                            <button x-show="selectedDate" @click="selectedDate = null"
+                                class="pb-2 text-xs font-bold uppercase tracking-widest transition border-b-2 border-transparent text-brand-red hover:text-brand-dark">
+                                Clear Filter
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Events List -->
+                    <div class="space-y-4">
+                        <template x-for="event in filteredEvents" :key="event.date + event.title">
+                            <div
+                                class="group flex flex-col md:flex-row bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
+                                <!-- Date/Time Column -->
+                                <div class="p-6 md:w-48 flex flex-col justify-center text-white" :class="event.color">
+                                    <span class="text-xs font-bold uppercase tracking-widest opacity-80"
+                                        x-text="new Date(event.date).toLocaleDateString('en-US', { weekday: 'long' })"></span>
+                                    <span class="font-serif text-2xl font-bold"
+                                        x-text="new Date(event.date).getDate() + ' ' + new Date(event.date).toLocaleDateString('en-US', { month: 'short' })"></span>
+                                    <span class="text-xs mt-2 opacity-80" x-text="event.time"></span>
+                                </div>
+
+                                <!-- Details Column -->
+                                <div class="p-6 flex-1 flex flex-col justify-center">
+                                    <span class="text-brand-gold text-[10px] font-bold uppercase tracking-widest mb-1"
+                                        x-text="event.type"></span>
+                                    <h4 class="font-serif text-xl font-bold text-brand-dark mb-2 group-hover:text-brand-red transition"
+                                        x-text="event.title"></h4>
+                                    <p class="text-sm text-gray-500 line-clamp-2">Join us for this special cultural
+                                        event featuring renowned artists from across the state.</p>
+
+                                    <div
+                                        class="mt-4 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-brand-dark transition cursor-pointer">
+                                        <span>View Details</span>
+                                        <i class="fas fa-arrow-right ml-2 text-[10px]"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Empty State -->
+                        <div x-show="filteredEvents.length === 0"
+                            class="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                            <i class="far fa-calendar-times text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500 font-serif text-lg">No events found for this date.</p>
+                            <button @click="selectedDate = null"
+                                class="mt-4 text-brand-red text-xs font-bold uppercase tracking-widest hover:underline">View
+                                All Events</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mixed Media Gallery Section -->
+        <section id="gallery" class="py-32 px-4 sm:px-6 lg:px-24 bg-gray-200" x-data="{ activeTab: 'all' }">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-16">
+                <div class="text-center md:text-left">
+                    <span class="text-brand-red font-bold uppercase tracking-widest text-xs mb-2 block">Media
+                        Lounge</span>
+                    <h2 class="font-serif text-4xl text-brand-dark">Gallery & Videos</h2>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex space-x-2 mt-6 md:mt-0 bg-white p-1 rounded-lg shadow-sm border border-gray-200">
+                    <button @click="activeTab = 'all'"
+                        :class="activeTab === 'all' ? 'bg-brand-dark text-white' : 'text-gray-500 hover:bg-gray-100'"
+                        class="px-6 py-2 rounded text-xs font-bold uppercase tracking-wider transition">All</button>
+                    <button @click="activeTab = 'photos'"
+                        :class="activeTab === 'photos' ? 'bg-brand-dark text-white' : 'text-gray-500 hover:bg-gray-100'"
+                        class="px-6 py-2 rounded text-xs font-bold uppercase tracking-wider transition">Photos</button>
+                    <button @click="activeTab = 'videos'"
+                        :class="activeTab === 'videos' ? 'bg-brand-dark text-white' : 'text-gray-500 hover:bg-gray-100'"
+                        class="px-6 py-2 rounded text-xs font-bold uppercase tracking-wider transition">Videos</button>
+                </div>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Video Item 1 -->
+                <div x-show="activeTab === 'all' || activeTab === 'videos'"
+                    class="group relative aspect-video bg-black overflow-hidden shadow-lg cursor-pointer">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/kbV3049E5K8"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                </div>
+
+                <!-- Photo Item 1 -->
+                <div x-show="activeTab === 'all' || activeTab === 'photos'"
+                    class="group relative aspect-video overflow-hidden shadow-lg cursor-pointer">
+                    <img src="assets/images/gallery/2025-11-28_154931.webp"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Video Item 2 -->
+                <div x-show="activeTab === 'all' || activeTab === 'videos'"
+                    class="group relative aspect-video bg-black overflow-hidden shadow-lg cursor-pointer">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/0Cq7JdnrKh8"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                </div>
+
+                <!-- Photo Item 2 -->
+                <div x-show="activeTab === 'all' || activeTab === 'photos'"
+                    class="group relative aspect-video overflow-hidden shadow-lg cursor-pointer">
+                    <img src="assets/images/gallery/2025-11-28_154952.webp"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Photo Item 3 -->
+                <div x-show="activeTab === 'all' || activeTab === 'photos'"
+                    class="group relative aspect-video overflow-hidden shadow-lg cursor-pointer">
+                    <img src="assets/images/gallery/2025-11-28_155004.webp"
+                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Video Item 3 -->
+                <div x-show="activeTab === 'all' || activeTab === 'videos'"
+                    class="group relative aspect-video bg-black overflow-hidden shadow-lg cursor-pointer">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/J7DIGTVHHQo"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="relative bg-brand-dark text-gray-300 py-16 px-6 lg:px-24 overflow-hidden">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 z-0">
+                <img src="assets/images/slider/sq/2.webp" class="w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-black/90"></div>
+            </div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- Column 1: Address & Contact -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="assets/images/logo.png" alt="Logo" class="h-12 bg-white p-1 rounded">
+                    </div>
+                    <p class="text-sm leading-relaxed">
+                        Nalanda, Nanthancode, Kowdiar,<br>
+                        P.O. Thiruvananthapuram - 695003<br>
+                        Kerala, India
+                    </p>
+                    <div class="text-sm space-y-2">
+                        <p><span class="text-brand-red font-bold">Tel:</span> +91 471 2311842, 2319127 (O)</p>
+                        <p><span class="text-brand-red font-bold">Email:</span> directormpcc@gmail.com</p>
+                    </div>
+                    <div class="flex gap-4 pt-4">
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center hover:bg-white transition"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center hover:bg-white transition"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center hover:bg-white transition"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Useful Links -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6 border-l-4 border-brand-red pl-3">Useful Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Terms and
+                                Conditions</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Copyright Policy</a>
+                        </li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Hyperlinking Policy</a>
+                        </li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Accessibility
+                                Statement</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Sitemap</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Important Links -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6 border-l-4 border-brand-red pl-3">Important Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#gallery" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Gallery</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Screen Reader
+                                Access</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Disclaimer</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Related Links</a></li>
+                        <li><a href="#" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Contact Us</a></li>
+                        <li><a href="#events" class="hover:text-brand-gold transition"><i
+                                    class="fas fa-chevron-right text-xs mr-2 text-brand-red"></i>Events</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Map -->
+                <div>
+                    <div class="bg-white p-2 rounded shadow-lg h-64 w-full">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.964207969566!2d76.9506683147833!3d8.50284899388656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05bbfd65555555%3A0x5555555555555555!2sVyloppilli%20Samskrithi%20Bhavan!5e0!3m2!1sen!2sin!4v1625555555555!5m2!1sen!2sin"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="relative z-10 mt-16 pt-8 border-t border-gray-800 text-center text-xs text-gray-500">
+                <p>&copy; 2025 Vyloppilli Samskrithi Bhavan. All rights reserved. | Designed by Dept. of Cultural
+                    Affairs.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Booking Modal -->
+    <div x-show="bookingModalOpen" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm transition-opacity"
+            @click="bookingModalOpen = false"></div>
+        <div class="bg-white w-full max-w-lg relative z-10 shadow-2xl overflow-hidden"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100">
+
+            <div class="bg-brand-red p-6 text-white flex justify-between items-center">
+                <h3 class="font-serif text-2xl" x-text="bookingCategory === 'hall' ? 'Book a Hall' : 'Book Dormitory'">
+                    Book a Venue</h3>
+                <button @click="bookingModalOpen = false" class="hover:text-brand-gold"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <div class="px-8 pt-6 flex gap-4 border-b border-gray-100">
+                <button @click="bookingCategory = 'hall'"
+                    :class="bookingCategory === 'hall' ? 'border-brand-red text-brand-red' : 'border-transparent text-gray-400'"
+                    class="pb-2 text-xs font-bold uppercase tracking-widest border-b-2 transition">Hall</button>
+                <button @click="bookingCategory = 'dormitory'"
+                    :class="bookingCategory === 'dormitory' ? 'border-brand-red text-brand-red' : 'border-transparent text-gray-400'"
+                    class="pb-2 text-xs font-bold uppercase tracking-widest border-b-2 transition">Dormitory</button>
+            </div>
+
+            <form class="p-8 space-y-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Name</label>
+                    <input type="text"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition"
+                        placeholder="John Doe">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Email</label>
+                    <input type="email"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition"
+                        placeholder="john@example.com">
+                </div>
+
+                <!-- Hall Fields -->
+                <div class="grid grid-cols-2 gap-4" x-show="bookingCategory === 'hall'">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Venue</label>
+                        <select x-model="bookingVenue"
+                            class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition">
+                            <option>Padippura</option>
+                            <option>Koothambalam</option>
+                            <option>Kalmandapam</option>
+                            <option>Rakendu Auditorium</option>
+                            <option>Undecided</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Date</label>
+                        <input type="date"
+                            class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition">
+                    </div>
+                </div>
+
+                <!-- Dormitory Fields -->
+                <div class="grid grid-cols-2 gap-4" x-show="bookingCategory === 'dormitory'">
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Check-in</label>
+                        <input type="date"
+                            class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Occupants</label>
+                        <input type="number" min="1" value="1"
+                            class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Duration
+                            (Days)</label>
+                        <input type="number" min="1" value="1"
+                            class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-red outline-none transition">
+                    </div>
+                </div>
+
+                <button type="button" @click="bookingModalOpen = false; alert('Inquiry Sent!')"
+                    class="w-full py-4 bg-brand-dark text-white font-bold uppercase tracking-widest hover:bg-brand-red transition">Confirm
+                    Inquiry</button>
+            </form>
+        </div>
+    </div>
+    <!-- Sidebar Scroll Script -->
+    <script src="assets/js/sidebar-scroll.js"></script>
+</body>
+
+</html>
